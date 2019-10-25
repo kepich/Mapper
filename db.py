@@ -24,9 +24,9 @@ class DB():
         MySes = sessionmaker(bind=engine)
         self.session = MySes()
 
-        first_sit = self.Situation('00000001', 'L100B10T10B100500')
-        self.session.add(first_sit)
-        self.session.commit()
+        #first_sit = self.Situation('00000001', 'L100B10T10B100500')
+        #self.session.add(first_sit)
+        #self.session.commit()
 
     def Add_Entry(self, env, route):
         new_entry = self.Situation(env, route)
