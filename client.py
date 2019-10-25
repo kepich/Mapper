@@ -15,5 +15,3 @@ if __name__ == "__main__":
     app.start_server()
     app.send("localhost", 8889, "message")
     app.stop_server()
-
-    print(sys.getsizeof('0b1'))
