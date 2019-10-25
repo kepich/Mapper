@@ -26,7 +26,7 @@ ses = MeSession()
 first_sit = Situation('00000001', 'L100B10T10B100500')
 ses.add(first_sit)
 ses.commit()
-ses.flush()
 
-recieve = ses.query(Situation).filter_by(env='00000011').first()
+
+recieve = ses.query(Situation).filter_by(env='00000001').first()
 print(recieve.route) if recieve != None else print('NoMatches')

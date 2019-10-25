@@ -20,16 +20,19 @@ class DB():
 
     def __init__(self):
         engine = create_engine('sqlite:///:memory:', echo=True)
-        Base.metadata.create_all(engine)
+        self.Base.metadata.create_all(engine)
         MySes = sessionmaker(bind=engine)
         self.session = MySes()
 
-    def Add_Entry(self, env, route):
-        new_entry = Situation(env, route)
-        self.session.add(new_entry)
-        ses.commit()
-        ses.flush()
+        first_sit = self.Situation('00000001', 'L100B10T10B100500')
+        self.session.add(first_sit)
+        self.session.commit()
 
-    def Get_By_Env(self, env):
-        rec = ses.query(Situation).filter_by(env='00000001').first()
+    def Add_Entry(self, env, route):
+        new_entry = self.Situation(env, route)
+        self.session.add(new_entry)
+        self.session.commit()
+
+    def Get_By_Env(self, envo):
+        rec = self.session.query(self.Situation).filter_by(env=envo).first()
         return 'NoMatches' if rec == None else rec.route

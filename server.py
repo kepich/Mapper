@@ -33,12 +33,9 @@ class Server:
     
     def handle(self, message):
         """
-        Checking recieving messages function
+        Prototype
         """
-        try:
-            print("Got: {}".format(message))
-        except Exception as e:
-            print("Error: {}".format(e))
+        pass
 
     def send(self, ip, port, message):
         """
