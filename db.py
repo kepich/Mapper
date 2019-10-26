@@ -25,10 +25,7 @@ class DB():
         self.Base.metadata.create_all(engine)
         MySes = sessionmaker(bind=engine)
         self.session = MySes()
-        self.Generator()
-        #first_sit = self.Situation('00000001', 'L100B10T10B100500')
-        #self.session.add(first_sit)
-        #self.session.commit()
+        #self.Generator()
 
     def Add_Entry(self, env, route):
         new_entry = self.Situation(env, route)

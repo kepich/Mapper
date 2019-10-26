@@ -1,6 +1,7 @@
 from server import Server
 from level_map import Level_map
 from db import DB
+import http.client
 
 class Mapping_server(Server):
     def __init__(self, ip, port):
@@ -17,7 +18,11 @@ class Mapping_server(Server):
 
 if __name__ == "__main__":
     print("Server started...")
-    app = Mapping_server("localhost", 8889)
+    conn = http.client.HTTPConnection("ifconfig.me")
+    conn.request("GET", "/ip")
+    my_ip = conn.getresponse().read().decode()
+    my_ip = "localhost"
+    app = Mapping_server(my_ip, 8889)
     app.start_server()
     app.loop()
     app.stop_server()
