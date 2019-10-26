@@ -35,4 +35,4 @@ class DB():
 
     def Get_By_Env(self, envo):
         rec = self.session.query(self.Situation).filter_by(env=envo).first()
-        return 'NoMatches' if rec == None else rec.route
+        return ('N' + envo) if rec == None else ('F' + rec.route)
