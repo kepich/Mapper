@@ -13,7 +13,7 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
         data = self.request.recv(1024)
         self.server.queue.add(data)
 
-class Queue:
+class Queue:                            # Server messages queue 
     def __init__(self, ip, port):
         self.server = ThreadedTCPServer((ip, port), ThreadedTCPRequestHandler)
         self.server.queue = self

@@ -4,7 +4,13 @@ import time
 from server import Server
 
 class Mapping_client(Server):
+    """
+        Class for client
+    """
     def handle(self, message):
+        """
+            Get message from queue
+        """
         try:
             recieved = message.decode()
             return recieved
@@ -14,21 +20,38 @@ class Mapping_client(Server):
         return ''
     
     def inp_env(self):
-        print('Enter envoirement (string of 8 chars, ex: TFRLHSPE): ')
+        """
+            Input function
+        """
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print('Enter envoirement (string of 8 chars, ex: TFRLHSPE) or Q to quite: ')
         query = ''
         while True:
             query = input()
             
-            if len(query) != 8 or (not query.isalpha()):
+            if len(query) != 8 or (not query.isalpha()):        # Input correct checking
                 if query == 'q' or query == 'Q':
                     break
                 else: 
                     print('Incorrect input! Try again!')
             else:
-                break
+                is_correct = True
+                string = query.upper()
+                req_symb = ['T', 'F', 'R', 'L', 'H', 'S', 'P', 'E']
+                for i in string:
+                    if req_symb.count(i) == 0:
+                        is_correct = False
+                        break
+                if is_correct:
+                    break
+                else:
+                    print('Incorrect input! Try again!')
         return query.upper()
     
     def correcting_env(self, old_env):
+        """
+            Correcting envoirement function
+        """
         print(': No matches found! Correcting request...')
         new_env = old_env[1:]
         ch_seq = ['L', 'R', 'H', 'S', 'F']
@@ -40,6 +63,9 @@ class Mapping_client(Server):
         return new_env
     
     def translate_ans(self, old_ans):
+        """
+            Translaiting  raw roote to beauty look up
+        """
         new_ans = old_ans[1:]
         new_ans = new_ans.replace('L', ', Left ')
         new_ans = new_ans.replace('R', ', Right ')
@@ -49,6 +75,9 @@ class Mapping_client(Server):
         return new_ans
 
     def loop(self, server_ip, server_port):
+        """
+            Client working loop
+        """
         is_resending = False
         while True:
             if not is_resending:
@@ -64,26 +93,36 @@ class Mapping_client(Server):
             
             print(': Sending: {} ...'.format(query))
 
-            query = my_ip + '_' + str(my_port) + '_' + query
+            query = my_ip + '_' + str(my_port) + '_' + query    # Message change to <...>_<...>_<...>
             self.send(server_ip, server_port, query)
             # *****************************************************************
 
-            recieved = False
+            is_timeout = False
+            timeout = 30         # Waiting answer timeout
             print(': Wating answer...')
-            while not recieved:
+            for i in range(timeout):                                 # Waiting answer
                 time.sleep(1)
+                    
                 while self.queue.exists():
                     print(': Query result recieved! Checking...')
                     query = self.handle(self.queue.get())
-                    recieved = True
+                    i = timeout
+                    break
+                
+                if i == timeout - 1:        # Timeout error
+                    print(': Wating time runs out! Server not available! Try again later!')
+                elif i == timeout:
                     break
             
-            if query[0] == 'N':
-                query = self.correcting_env(query)
-                is_resending = True
+            if not is_timeout:
+                if query[0] == 'N':                         # Correcting or translating answer
+                    query = self.correcting_env(query)
+                    is_resending = True
+                else:
+                    print(self.translate_ans(query))
+                    is_resending = False
             else:
-                print(self.translate_ans(query))
-                is_resending = False
+                timeout = False
 
 if __name__ == "__main__":
     print("Client started...")

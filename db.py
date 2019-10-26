@@ -1,17 +1,21 @@
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import mapper, sessionmaker
-from itertools import combinations_with_replacement
+from itertools import product
+from os import remove
 import random
 
 class DB():
     Base = declarative_base()
 
     class Situation(Base):
+        """
+            Database
+        """
         __tablename__ = 'Situations'
         id = Column(Integer, primary_key=True)
-        env = Column(String)
-        route = Column(String)
+        env = Column(String)    #Environment
+        route = Column(String)  # Route
 
         def __init__(self, env, route):
             self.env = env
@@ -20,12 +24,18 @@ class DB():
         def __repr__(self):
             return "<Situation('%s', '%s')>" % (self.env, self.route)
 
-    def __init__(self):
+    def __init__(self, is_new_db):
+        """
+            is_new_db - True - create new database, False - use old database
+        """
+        if is_new_db:
+            remove('myDb.db')
         engine = create_engine('sqlite:///myDb.db', echo=False)
         self.Base.metadata.create_all(engine)
         MySes = sessionmaker(bind=engine)
         self.session = MySes()
-        #self.Generator()
+        if is_new_db:
+            self.Generator()
 
     def Add_Entry(self, env, route):
         new_entry = self.Situation(env, route)
@@ -36,6 +46,7 @@ class DB():
         rec = self.session.query(self.Situation).filter_by(env=envo).first()
         return ('N' + envo) if rec == None else ('F' + rec.route)
 
+    # \/ \/ \/ This methods used to generate random envs and routs \/ \/ \/
     def Generate_Route(self):
         path = ''
         rotations = ['L', 'R', 'T', 'B']
@@ -68,7 +79,7 @@ class DB():
         amount_of_sits = 4000
 
         def_sits = ['E', 'T', 'P']
-        default_sits = list(map(lambda t: ''.join(t), list(combinations_with_replacement(def_sits, 8))))
+        default_sits = list(map(lambda t: ''.join(t), list(product(def_sits, def_sits, repeat=4))))
         
         for i in default_sits:
             new_entry = self.Situation(i, self.Generate_Route())
@@ -77,7 +88,7 @@ class DB():
 
         for i in range(amount_of_sits):
             if (i % (amount_of_sits / 100)) == 0:
-                print(i * 100 / amount_of_sits)
+                print(str(i * 100 // amount_of_sits) + '%')
                 self.session.commit()
             new_entry = self.Situation(self.Generate_Situation(), self.Generate_Route())
             self.session.add(new_entry)
