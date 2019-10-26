@@ -1,3 +1,4 @@
-st = 'abcde'
-st[2] = '1'
-print(st)
+import http.client
+conn = http.client.HTTPConnection("ifconfig.me")
+conn.request("GET", "/ip")
+print(conn.getresponse().read().decode())

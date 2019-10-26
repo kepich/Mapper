@@ -54,7 +54,7 @@ class Mapping_client(Server):
             if not is_resending:
                 query = self.inp_env()
                 
-                if query == 'q':
+                if query == 'Q':
                     return
 
             # Sending message *************************************************
