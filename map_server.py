@@ -3,7 +3,7 @@ from db import DB
 import http.client
 from sys import argv
 import time
-import socket
+from socket import gethostname, gethostbyname
 
 class Mapping_server(Server):
     """
@@ -34,7 +34,7 @@ class Mapping_server(Server):
 
 if __name__ == "__main__":
     print("Server started...")
-    my_ip = socket.gethostbyname(socket.gethostname())
+    my_ip = gethostbyname(gethostname())
     if len(argv) == 2 and argv[1] == '\\t':
         app = Mapping_server(my_ip, 8889, True)
     else:

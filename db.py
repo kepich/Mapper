@@ -76,7 +76,7 @@ class DB():
         return situation
 
     def Generator(self):
-        amount_of_sits = 4000
+        amount_of_sits = 400000
 
         def_sits = ['E', 'T', 'P']
         default_sits = list(map(lambda t: ''.join(t), list(product(def_sits, def_sits, repeat=4))))
