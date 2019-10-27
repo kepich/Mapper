@@ -89,7 +89,7 @@ class Mapping_client(Server):
             # Sending message *************************************************
             print('******************************************')
             my_port = 8899
-            my_ip = "localhost"
+            my_ip = socket.gethostbyname(socket.gethostname())
             
             print(': Sending: {} ...'.format(query))
 
@@ -138,9 +138,9 @@ if __name__ == "__main__":
     print("Client started...")
     
     my_port = 8899
-    my_ip = "localhost"
+    my_ip = socket.gethostbyname(socket.gethostname())
     
-    server_ip = "127.0.0.1"
+    server_ip = socket.gethostbyname(socket.gethostname())
     server_port = 8889
     
     app = Mapping_client(my_ip, my_port)
