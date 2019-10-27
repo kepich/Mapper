@@ -16,7 +16,16 @@ class Mapping_server(Server):
             sender_info = (message.decode()).split('_')
             result = self.data_base.Get_By_Env(sender_info[2])
             print("Send: {}".format(result))
-            self.send(sender_info[0], int(sender_info[1]), result)
+            amount_of_resending = 5
+            temp_tr = 0
+            for temp_tr in range(amount_of_resending):
+                if self.send(sender_info[0], int(sender_info[1]), result) == -1:
+                    print(': ({} of {})Message is not sended! Resending...'.format(temp_tr + 1, amount_of_resending))
+                    time.sleep(1)
+                else:
+                    break
+            else:
+                print(': ERROR! Connection refused! Check your internet connection or try again later!')
         except Exception as e:
             print("Error: {}".format(e))
 
@@ -31,4 +40,5 @@ if __name__ == "__main__":
 
     app.start_server()
     app.loop()
+    print("*** Server closed! Bye! ***")
     app.stop_server()

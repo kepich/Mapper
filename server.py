@@ -42,8 +42,12 @@ class Server:
         Sending function
         """
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((ip, port))
+        try:
+            sock.connect((ip, port))
+        except ConnectionRefusedError as e:
+            return -1
         try:
             sock.sendall(bytes(message, 'ascii'))
         finally:
             sock.close()
+            return 0

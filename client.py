@@ -94,7 +94,17 @@ class Mapping_client(Server):
             print(': Sending: {} ...'.format(query))
 
             query = my_ip + '_' + str(my_port) + '_' + query    # Message change to <...>_<...>_<...>
-            self.send(server_ip, server_port, query)
+            amount_of_resending = 5
+            temp_tr = 0
+            for temp_tr in range(amount_of_resending):
+                if self.send(server_ip, server_port, query) == -1:
+                    print(': ({} of {})Message is not sended! Resending...'.format(temp_tr + 1, amount_of_resending))
+                    time.sleep(1)
+                else:
+                    break
+            else:
+                print(': ERROR! Connection refused! Check your internet connection or try again later!')
+                continue
             # *****************************************************************
 
             is_timeout = False
@@ -136,4 +146,5 @@ if __name__ == "__main__":
     app = Mapping_client(my_ip, my_port)
     app.start_server()
     app.loop(server_ip, server_port)
+    print("*** Client closed! Bye! ***")
     app.stop_server()

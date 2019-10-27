@@ -26,7 +26,6 @@ class Queue:                            # Server messages queue
         print("Server running in thread:", self.server_thread.name)
 
     def stop_server(self):
-        print("*** Server closed! Bye! ***")
         self.server.shutdown()
         self.server.server_close()
 
